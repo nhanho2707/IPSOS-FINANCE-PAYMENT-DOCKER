@@ -23,14 +23,11 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy composer files first for layer caching
 COPY composer.json composer.lock ./
 
-# Install Laravel dependencies (no dev dependencies in production)
-RUN composer install --no-interaction --optimize-autoloader --no-dev
+# Install Laravel dependencies
+RUN composer install --no-interaction --optimize-autoloader
 
 # Copy the rest of the application code
 COPY . .
-
-# Copy Docker environment file
-COPY .env.docker .env.docker
 
 # Copy and set entrypoint
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
