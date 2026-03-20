@@ -9,7 +9,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 import { ColumnFormat } from "../../config/ColumnConfig";
 
@@ -34,7 +34,7 @@ const TransactionsManager = () => {
         setSearchTerm(value.toLocaleLowerCase());
     }
 
-    const exportToExcel = (rows: any[], fileName='transactions.xlsx') => {
+    const exportToExcel = async (rows: any[], fileName='transactions.xlsx') => {
 
         if(!rows || rows.length === 0) return;
 
@@ -66,16 +66,16 @@ const TransactionsManager = () => {
 
         }));
 
-        // 2. Tạo worksheet từ data
-        const worksheet = XLSX.utils.json_to_sheet(data);
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Transactions");
 
-        // 3. Tạo workbook và thêm worksheet
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Transactions");
+        if (data.length > 0) {
+            worksheet.columns = Object.keys(data[0]).map(key => ({ header: key, key }));
+            data.forEach(row => worksheet.addRow(row));
+        }
 
-        // 4. Xuất file Excel
-        const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-        const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: "application/octet-stream" });
         saveAs(blob, fileName);
     }
 

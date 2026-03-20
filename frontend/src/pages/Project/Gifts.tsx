@@ -8,7 +8,7 @@ import { ColumnFormat } from "../../config/ColumnConfig";
 import SearchTextBox from "../../components/SearchTextBox";
 import ReusableTable from "../../components/Table/ReusableTable";
 import { useVisibility } from "../../hook/useVisibility";
-import * as XLSX from "xlsx";
+import ExcelJS from "exceljs";
 import AlertDialog from "../../components/AlertDialog/AlertDialog";
 import useDialog from "../../hook/useDialog";
 import { useOfflineProjectRespondents } from "../../hook/useOfflineProjectRespondents";
@@ -184,12 +184,34 @@ const Gifts: React.FC = () => {
 
         try {
             const data = await file.arrayBuffer();
-            const workbook = XLSX.read(data);
-            const sheetName = workbook.SheetNames[0];
-            const worksheet = workbook.Sheets[sheetName];
+            const workbook = new ExcelJS.Workbook();
+            await workbook.xlsx.load(data);
+            const worksheet = workbook.worksheets[0];
 
-            const jsonData = XLSX.utils.sheet_to_json<any>(worksheet, {
-                defval: ""
+            if (!worksheet || worksheet.rowCount <= 1) {
+                openDialog({
+                    title: "Import Respondents Failed",
+                    message: 'File không có dữ liệu!',
+                    showConfirmButton: false
+                });
+                return;
+            }
+
+            // Extract headers from the first row
+            const headers: string[] = [];
+            worksheet.getRow(1).eachCell({ includeEmpty: true }, (cell, colNumber) => {
+                headers[colNumber - 1] = cell.value?.toString() ?? "";
+            });
+
+            // Build JSON rows from remaining rows
+            const jsonData: any[] = [];
+            worksheet.eachRow((row, rowNumber) => {
+                if (rowNumber === 1) return;
+                const rowObj: any = {};
+                row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
+                    rowObj[headers[colNumber - 1]] = cell.value ?? "";
+                });
+                jsonData.push(rowObj);
             });
 
             if (!jsonData.length) {
