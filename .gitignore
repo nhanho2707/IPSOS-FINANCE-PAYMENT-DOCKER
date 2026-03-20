@@ -1,0 +1,24 @@
+# Docker environment files
+.env
+
+# Backend build artifacts
+backend/vendor/
+backend/.env
+backend/node_modules/
+
+# Frontend build artifacts
+frontend/node_modules/
+frontend/build/
+
+# MySQL data
+mysql/data/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo

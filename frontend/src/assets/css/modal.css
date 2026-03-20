@@ -1,0 +1,106 @@
+/* === Modal Container === */
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+.modal-box {
+  background: var(--background-color);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  width: 100%;
+  max-width: 40rem; /* tương đương ~640px */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+/* === Modal Header === */
+.modal-box h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-color);
+  text-align: center;
+}
+
+/* === Modal Buttons === */
+.btn-modal-cancel,
+.btn-modal-submit {
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.625rem; 
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-transform: none;
+  transition: background-color 0.2s ease;
+}
+
+.btn-modal-cancel {
+  background-color: #f5f5f5;
+  color: var(--text-color);
+}
+
+.btn-modal-cancel:hover {
+  background-color: #e0e0e0;
+}
+
+.btn-modal-submit {
+  background-color: var(--main-color);
+  color: #fff;
+}
+
+.btn-modal-submit:hover {
+  background-color: #0056b3; /* adjust darker main-color if needed */
+}
+
+/* === Modal Content === */
+.content-modal {
+  margin: 1.5rem 0;
+}
+
+.textfield-add {
+  width: 100%;
+  font-size: 0.9375rem;
+}
+
+/* === Error Message === */
+.error-control {
+  margin: 0.75rem 0; 
+}
+
+.error-control .MuiAlert-root {
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+}
+
+/* === Modal Footer === */
+.btn-modal-footer {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+/* Responsive */
+@media screen and (max-width: var(--breakpoint-lg)) {
+  .modal-box {
+    max-width: 90%; /* Laptop nhỏ / tablet */
+    padding: 1.5rem;
+  }
+}
+
+@media screen and (max-width: var(--breakpoint-md)) {
+  .modal-box {
+    max-width: 95%; /* Tablet dọc */
+    padding: 1.25rem;
+  }
+}
+
+@media screen and (max-width: var(--breakpoint-sm)) {
+  .modal-box {
+    max-width: 100%; /* Mobile nhỏ */
+    border-radius: 0.5rem;
+    padding: 1rem;
+  }
+}
+
